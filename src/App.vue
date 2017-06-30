@@ -8,7 +8,10 @@
       <h2 class='md-title' style='flex: 1;'>GitHubApplication</h2>
 
       <md-input-container style='flex: 1;'>
-        <md-input placeholder='Search username'></md-input>
+        <md-input
+          placeholder='Search username'
+          v-model='username'
+        ></md-input>
       </md-input-container>
     </md-toolbar>
 
@@ -19,6 +22,14 @@
         </md-button>
         <h2 class='md-title'>GitHubApp</h2>
       </md-toolbar>
+      <md-list class="custom-list md-triple-line">
+        <md-list-item>
+          <router-link :to="{ name: 'repositories' }">Repositories</router-link>
+        </md-list-item>
+        <md-list-item>
+          <router-link :to="{ name: 'user' }">User</router-link>
+        </md-list-item>
+      </md-list>
     </md-sidenav>
 
     <div class='main-content'>
@@ -30,6 +41,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import { router } from './bootstrap'
 
 export default {
@@ -39,25 +51,48 @@ export default {
 
   data () {
     return {
-      user: null
+      user: null,
+      username: null,
+      repositories: []
+    }
+  },
+
+  watch: {
+    username (value) {
+      this.setUsername(value)
     }
   },
 
   methods: {
     fetchUser (username) {
       this.$http.get(`users/${username}`)
-        .then((res) => {
-          this.user = res.data
+        .then(({ data }) => {
+          this.user = data
+        })
+    },
+
+    fetchRepositories (username) {
+      this.$http.get(`users/${username}/repos`)
+        .then(({ data }) => {
+          this.repositories = data
         })
     },
 
     toggleSidenav () {
       this.$refs.sidenav.toggle()
-    }
-  },
+    },
 
-  mounted () {
-    this.fetchUser('evgeniy28')
+    setUsername: _.debounce(function(username) {
+      if (username) {
+        this.fetchUser(username)
+        this.fetchRepositories(username)
+      }
+
+      if (!username) {
+        this.user = null
+        this.repositories = []
+      }
+    }, 500)
   }
 }
 </script>
