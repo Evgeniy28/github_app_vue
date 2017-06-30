@@ -2,6 +2,7 @@ import Vue from 'vue'
 
 Vue.config.debug = process.env.NODE_ENV !== 'production'
 
+// Axios
 import axios from 'axios'
 
 axios.defaults.baseURL = process.env.API_LOCATION
@@ -13,6 +14,7 @@ Object.defineProperty(Vue.prototype, '$http', {
   }
 })
 
+// Vue Router
 import VueRouter from 'vue-router'
 import routes from './routes'
 
@@ -23,8 +25,21 @@ export const router = new VueRouter({
   routes
 })
 
+// Vue Material
+import VueMaterial from 'vue-material'
+
+Vue.use(VueMaterial)
+
+Vue.material.registerTheme('default', {
+  primary: 'blue',
+  accent: 'red',
+  warn: 'red'
+})
+
+// Include project stylesheet
 import './assets/sass/app.sass'
 
+// Export
 export default {
   router
 }
