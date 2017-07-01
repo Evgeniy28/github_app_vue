@@ -24,10 +24,20 @@
       </md-toolbar>
       <md-list class="custom-list md-triple-line">
         <md-list-item>
-          <router-link :to="{ name: 'repositories' }">Repositories</router-link>
+          <router-link
+            :to="{ name: 'repositories' }"
+            @click.native='closeSidenav'
+          >
+            Repositories
+          </router-link>
         </md-list-item>
         <md-list-item>
-          <router-link :to="{ name: 'user' }">User</router-link>
+          <router-link
+            :to="{ name: 'user' }"
+            @click.native='closeSidenav'
+          >
+            User
+          </router-link>
         </md-list-item>
       </md-list>
     </md-sidenav>
@@ -80,6 +90,10 @@ export default {
 
     toggleSidenav () {
       this.$refs.sidenav.toggle()
+    },
+
+    closeSidenav () {
+      this.$refs.sidenav.close()
     },
 
     setUsername: _.debounce(function(username) {
